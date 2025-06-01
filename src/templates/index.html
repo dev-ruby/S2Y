@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spotify Playlist Downloader</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Spotify 플레이리스트 다운로더</h1>
+        <form id="playlistForm">
+            <label for="playlistUrl">Spotify 플레이리스트 링크:</label><br>
+            <input type="text" id="playlistUrl" name="playlistUrl" placeholder="여기에 링크를 붙여넣으세요" required>
+            <button type="submit">다운로드</button>
+        </form>
+        <div id="result">
+            <!-- 다운로드 링크나 진행 상태가 여기에 표시됩니다. -->
+        </div>
+    </div>
+    <script src="/static/script.js"></script>
+</body>
+</html>
