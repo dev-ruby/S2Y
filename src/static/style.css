@@ -58,3 +58,63 @@ button:hover {
     margin-top: 10px;
     font-size: 0.9rem;
 }
+
+.progress-wrapper {
+    margin-top: 20px;
+    text-align: left;
+}
+.progress-label {
+    margin-bottom: 5px;
+    font-size: 0.9rem;
+    color: #666;
+}
+.progress-bar {
+    width: 100%;
+    background-color: #e0e0e0;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 15px;
+    height: 20px;
+}
+
+.progress-fill {
+    height: 100%;
+    width: 0%;
+    background-color: #1DB954;
+    transition: width 0.4s ease;
+    border-radius: 10px;
+}
+
+
+@keyframes fillGrow {
+    from {
+        width: 0%;
+    }
+    to {
+        width: var(--progress);
+    }
+}
+
+#downloadBar,
+#completeBar {
+    height: 100%;
+    width: 0%;
+    border-radius: 10px;
+    transition: width 0.4s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 0.8rem;
+    font-weight: bold;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+#downloadBar {
+    background-color: #1DB954;
+}
+
+#completeBar {
+    background-color: #ffa500;
+}
