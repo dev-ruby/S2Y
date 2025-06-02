@@ -1,16 +1,17 @@
 import os
-from src.utils.playlist import load_spotify_resource
-from src.utils.search import search_all
+import re
 import shutil
-from src.utils.mp3_downloader_sh import download_mp3_parallel_async
 import asyncio
 from zipfile import ZipFile
-import re
-import time
-import hashlib
+
+from src.utils.playlist import load_spotify_resource
+from src.utils.search import search_all
+from src.utils.mp3_downloader_sh import download_mp3_parallel_async
+
 
 def sanitize_filename(name: str) -> str:
     return re.sub(r'[\\/*?:"<>|]', "", name).strip()
+
 
 async def delete_file_later(path: str, delay: int = 600):
     await asyncio.sleep(delay)
@@ -39,7 +40,6 @@ async def fetch_playlist(url, callback, pl_id):
 
     dl = [(s[0]["link"], s[0]["original_query"]["name"], pl_id) for s in sr if s]
 
-    
     await callback(
         {
             "type": "status",
@@ -65,7 +65,7 @@ async def fetch_playlist(url, callback, pl_id):
     os.remove(f"./tmp/{pl_id}.txt")
 
     asyncio.create_task(delete_file_later(zip_path, delay=600))
-    
+
     await callback(
         {
             "type": "success",
