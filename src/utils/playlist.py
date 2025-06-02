@@ -1,17 +1,13 @@
-import spotipy
-from spotipy.oauth2 import SpotifyOAuth, SpotifyClientCredentials
-from spotipy.exceptions import SpotifyException
 import os
+
 from dotenv import load_dotenv
+import spotipy
+from spotipy.oauth2 import SpotifyClientCredentials
+from spotipy.exceptions import SpotifyException
+
 
 load_dotenv()
 
-# sp = spotipy.Spotify(auth_manager=SpotifyOAuth(
-#     client_id=os.environ.get("SPOTIFY_CLIENT_ID"),
-#     client_secret=os.environ.get("SPOTIFY_CLIENT_SECRET"),
-#     redirect_uri=os.environ.get("SPOTIFY_REDIRECT_URI"),
-#     scope="playlist-read-private"
-# ))
 
 sp = spotipy.Spotify(
     auth_manager=SpotifyClientCredentials(
