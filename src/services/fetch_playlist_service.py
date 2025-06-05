@@ -7,8 +7,6 @@ from src.providers.downloader import download_mp3_async
 from src.utils.file import sanitize_filename, delete_file_later, make_zip
 
 
-
-
 async def fetch_playlist(url: str, callback: Callable, playlist_id: str):
     """
     Fetches a Spotify playlist, searches for each track, downloads them,
@@ -23,32 +21,34 @@ async def fetch_playlist(url: str, callback: Callable, playlist_id: str):
         None
     """
     try:
-        await callback({
-            "type": "status",
-            "message": "Fetching playlist data...",
-        })
-        
+        await callback(
+            {
+                "type": "status",
+                "message": "Fetching playlist data...",
+            }
+        )
+
         playlist = load_spotify_resource(url)
         playlist_name = sanitize_filename(playlist.name)
-        
-        queries = [f"{track.title} - {track.artist}" for track in playlist.tracks]
-        
-        search_results = await search_all(queries)
-        
-        await callback({
-            "type": "status",
-            "message": f"Downloading <code>{playlist.tracks[0].title}</code> and {len(playlist.tracks)-1} more tracks...",
-        })
 
-        await download_mp3_async(
-            playlist_id,
-            search_results,
-            callback
+        queries = [f"{track.title} - {track.artist}" for track in playlist.tracks]
+
+        search_results = await search_all(queries)
+
+        await callback(
+            {
+                "type": "status",
+                "message": f"Downloading <code>{playlist.tracks[0].title}</code> and {len(playlist.tracks)-1} more tracks...",
+            }
         )
-        
+
+        await download_mp3_async(playlist_id, search_results, callback)
+
         make_zip(f"./src/static/pl/{playlist_id}.zip", f"./tmp/{playlist_id}")
 
-        asyncio.create_task(delete_file_later(f"./src/static/pl/{playlist_id}.zip", delay=600))
+        asyncio.create_task(
+            delete_file_later(f"./src/static/pl/{playlist_id}.zip", delay=600)
+        )
 
         await callback(
             {
@@ -58,7 +58,9 @@ async def fetch_playlist(url: str, callback: Callable, playlist_id: str):
             }
         )
     except Exception as e:
-        await callback({
-            "type": "error",
-            "message": f"An error occurred: {str(e)}",
-        })
+        await callback(
+            {
+                "type": "error",
+                "message": f"An error occurred: {str(e)}",
+            }
+        )

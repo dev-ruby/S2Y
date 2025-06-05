@@ -12,6 +12,7 @@ spotify_client = spotipy.Spotify(
     )
 )
 
+
 def validate_spotify_url(url: str) -> bool:
     """
     Validate if the provided URL is a valid Spotify playlist or album URL.
@@ -22,10 +23,11 @@ def validate_spotify_url(url: str) -> bool:
     Returns:
         bool: True if the URL is a valid Spotify playlist or album URL, False otherwise.
     """
-    
+
     return url.startswith("https://open.spotify.com/") and (
         "playlist/" in url or "album/" in url
     )
+
 
 def load_spotify_resource(url: str) -> Playlist:
     """
@@ -45,13 +47,19 @@ def load_spotify_resource(url: str) -> Playlist:
 
     resource_type = "playlist" if "playlist/" in url else "album"
     resource_id = url.split(f"{resource_type}/")[1].split("?")[0]
-    
+
     if resource_type == "playlist":
         resource = spotify_client.playlist(resource_id)
-        musics = [Music(track["track"]["name"], track["track"]["artists"][0]["name"]) for track in resource["tracks"]["items"]]
-    
+        musics = [
+            Music(track["track"]["name"], track["track"]["artists"][0]["name"])
+            for track in resource["tracks"]["items"]
+        ]
+
     else:
         resource = spotify_client.album(resource_id)
-        musics = [Music(track["name"], track["artists"][0]["name"]) for track in resource["tracks"]["items"]]
+        musics = [
+            Music(track["name"], track["artists"][0]["name"])
+            for track in resource["tracks"]["items"]
+        ]
 
     return Playlist(resource["name"], musics)
