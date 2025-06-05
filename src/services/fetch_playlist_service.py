@@ -35,9 +35,9 @@ async def fetch_playlist(url: str, callback: Callable, playlist_id: str):
     playlist = load_spotify_resource(url)
     playlist_name = sanitize_filename(playlist.name)
     
-    querys = [f"{track.title} - {track.artist}" for track in playlist.tracks]
+    queries = [f"{track.title} - {track.artist}" for track in playlist.tracks]
     
-    search_results = await search_all(querys)
+    search_results = await search_all(queries)
     
     await callback({
         "type": "status",
