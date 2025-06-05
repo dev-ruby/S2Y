@@ -1,4 +1,6 @@
 import asyncio
+import os
+
 from typing import Callable
 from src.models.search_result import SearchResult
 from src.configs import Config
