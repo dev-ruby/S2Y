@@ -26,39 +26,43 @@ async def fetch_playlist(url: str, callback: Callable, playlist_id: str):
     Returns:
         None
     """
-    
-    await callback({
-        "type": "status",
-        "message": "Fetching playlist data...",
-    })
-    
-    playlist = load_spotify_resource(url)
-    playlist_name = sanitize_filename(playlist.name)
-    
-    queries = [f"{track.title} - {track.artist}" for track in playlist.tracks]
-    
-    search_results = await search_all(queries)
-    
-    await callback({
-        "type": "status",
-        "message": f"Downloading <code>{playlist.tracks[0].title}</code> and {len(playlist.tracks)-1} more tracks...",
-    })
+    try:
+        await callback({
+            "type": "status",
+            "message": "Fetching playlist data...",
+        })
+        
+        playlist = load_spotify_resource(url)
+        playlist_name = sanitize_filename(playlist.name)
+        
+        queries = [f"{track.title} - {track.artist}" for track in playlist.tracks]
+        
+        search_results = await search_all(queries)
+        
+        await callback({
+            "type": "status",
+            "message": f"Downloading <code>{playlist.tracks[0].title}</code> and {len(playlist.tracks)-1} more tracks...",
+        })
 
-    await download_mp3_async(
-        playlist_id,
-        search_results,
-        callback
-    )
-    
-    make_zip(f"./src/static/pl/{playlist_id}.zip", f"./tmp/{playlist_id}")
+        await download_mp3_async(
+            playlist_id,
+            search_results,
+            callback
+        )
+        
+        make_zip(f"./src/static/pl/{playlist_id}.zip", f"./tmp/{playlist_id}")
 
-    asyncio.create_task(delete_file_later(f"./src/static/pl/{playlist_id}.zip", delay=600))
+        asyncio.create_task(delete_file_later(f"./src/static/pl/{playlist_id}.zip", delay=600))
 
-    await callback(
-        {
-            "type": "success",
-            "pl_name": playlist_name,
-            "download_url": f"/static/pl/{playlist_id}.zip",
-        }
-    )
-    
+        await callback(
+            {
+                "type": "success",
+                "pl_name": playlist_name,
+                "download_url": f"/static/pl/{playlist_id}.zip",
+            }
+        )
+    except Exception as e:
+        await callback({
+            "type": "error",
+            "message": f"An error occurred: {str(e)}",
+        })
