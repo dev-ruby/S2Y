@@ -1,8 +1,4 @@
-import os
-import re
-import shutil
 import asyncio
-from zipfile import ZipFile
 from typing import Callable
 
 from src.providers.spotify import load_spotify_resource
