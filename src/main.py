@@ -7,14 +7,24 @@ from fastapi.templating import Jinja2Templates
 from fastapi.middleware.cors import CORSMiddleware
 
 from src.routers import fetch_playlist
-
-# Get the absolute path to the project root directory
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-STATIC_DIR = os.path.join(BASE_DIR)  # Serve static files from the project root
+from src.configs import Config
 
 app = FastAPI()
 
-# Add CORS middleware
+
+def convert_to_unix_line_endings(file_path):
+    with open(file_path, "rb") as f:
+        content = f.read()
+
+    # Replace Windows line endings (\r\n) with Unix (\n)
+    content = content.replace(b"\r\n", b"\n")
+
+    with open(file_path, "wb") as f:
+        f.write(content)
+
+
+convert_to_unix_line_endings(Config.path.DOWNLOADER_SCRIPT)
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -23,26 +33,18 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-templates = Jinja2Templates(directory="src/templates")
+templates = Jinja2Templates(directory=Config.path.TEMPLATES_DIR)
 
-# Mount the directory containing index.html as static files
-# This allows accessing index.html directly at the root URL
-app.mount("/static", StaticFiles(directory="src/static"), name="static")
+app.mount("/static", StaticFiles(directory=Config.path.STATIC_DIR), name="static")
 
 app.include_router(fetch_playlist.router)
 
 
 @app.get("/", response_class=HTMLResponse)
 async def read_root(request: Request):
-    """
-    Serves the index.html file from the project root directory.
-    """
     return templates.TemplateResponse("index.html", {"request": request})
 
 
 @app.get("/health")
 async def health_check():
-    """
-    Health check endpoint to verify the server is running.
-    """
     return {"status": "ok", "message": "Server is running."}

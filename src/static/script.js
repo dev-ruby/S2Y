@@ -74,7 +74,7 @@ document.getElementById('playlistForm').addEventListener('submit', function(even
                 if (data.type === "ping") return;
 
                 if (data.type === "status") {
-                    document.getElementById('result').innerHTML = `<p>다운로드 큐 대기중, 총 ${data.total_tracks}곡</p>`;
+                    document.getElementById('result').innerHTML = `<p>${data.message}</p>`;
                 }
 
                 if (data.type === "downloaded" || data.type === "completed") {

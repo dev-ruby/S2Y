@@ -1,5 +1,6 @@
-from pydantic import BaseModel
+from src.models.music import Music
 
-
-class PlaylistRequest(BaseModel):
-    url: str
+class Playlist:
+    def __init__(self, name: str, tracks: list[Music]):
+        self.name = name
+        self.tracks = tracks

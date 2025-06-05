@@ -4,7 +4,7 @@ import asyncio
 
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 
-from src.models.playlist import PlaylistRequest
+from src.schemas.playlist import PlaylistRequest
 from src.services.fetch_playlist_service import fetch_playlist as fetch_playlist_service
 
 
